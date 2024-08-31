@@ -23,6 +23,27 @@ exports.addUser = async (req, res) => {
 };
 
 
+exports.updateUser = async (req, res) => {
+      const { id } = req.params;
+      const { name, email, phone } = req.body;
+
+      if (!name || !email || !phone) {
+            return res.status(400).json({ error: 'Missing user data' });
+      }
+
+      try {
+            await promisePool.query(
+                  'UPDATE users SET name = ?, email = ?, phone = ? WHERE id = ?',
+                  [name, email, phone, id]
+            );
+            res.status(200).send('User updated successfully');
+      } catch (err) {
+            res.status(500).json({ error: err.message });
+      }
+};
+
+
+
 exports.deleteUser = async (req, res) => {
       const { id } = req.params;
       try {
